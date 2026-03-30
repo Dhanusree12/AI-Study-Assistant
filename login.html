@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Study Assistant - Login</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+
+<body>
+    <div class="auth-container">
+        <!-- Illustration Side -->
+        <div class="auth-illustration">
+            <!-- SVGR Placeholder for cute study illustration -->
+            <svg width="200" height="200" viewBox="0 0 24 24" fill="var(--primary-dark)"
+                xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 20px;">
+                <path d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z" />
+            </svg>
+            <h2>Welcome Back!</h2>
+            <p>Your personal AI study buddy missed you.</p>
+        </div>
+
+        <!-- Form Side -->
+        <div class="auth-form-container">
+            <h1>Login</h1>
+            <p>Enter your details to continue your study session.</p>
+
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="example@student.com" required>
+                    <i class="fa-regular fa-envelope"></i>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                    <i class="fa-regular fa-eye-slash" id="toggle-password"></i>
+                </div>
+
+                <button type="submit" class="btn auth-btn">Login to Study</button>
+
+                <div class="auth-divider"><span>OR</span></div>
+
+                <div id="g_id_onload"
+                    data-client_id="971620819061-8joccl2arsbcm3r1a4ehu35r8730rilg.apps.googleusercontent.com"
+                    data-context="signin" data-ux_mode="popup" data-callback="handleGoogleLogin"
+                    data-auto_prompt="false">
+                </div>
+                <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline"
+                    data-text="continue_with" data-size="large" data-logo_alignment="left" data-width="100%">
+                </div>
+            </form>
+
+            <div class="auth-links">
+                Don't have an account? <a href="signup.html">Sign Up</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleGoogleLogin(response) {
+            const userData = JSON.parse(atob(response.credential.split('.')[1]));
+            localStorage.setItem("user", JSON.stringify({
+                name: userData.name,
+                email: userData.email,
+                picture: userData.picture
+            }));
+            
+            // Integrate with app's multi-user system
+            const users = JSON.parse(localStorage.getItem('study_users')) || [];
+            let user = users.find(u => u.email === userData.email);
+            if (!user) {
+                user = {
+                    id: 'g_' + userData.sub,
+                    name: userData.name,
+                    email: userData.email,
+                    profileImage: userData.picture,
+                    type: 'google'
+                };
+                users.push(user);
+                localStorage.setItem('study_users', JSON.stringify(users));
+            }
+            localStorage.setItem('currentUserId', user.id);
+            window.location.href = "index.html";
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

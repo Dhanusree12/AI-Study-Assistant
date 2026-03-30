@@ -1,0 +1,14 @@
+# Secrets & Env
+.env
+
+# Dependencies
+node_modules
+dist
+.vscode
+.idea
+.DS_Store
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
